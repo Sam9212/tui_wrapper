@@ -1,0 +1,9 @@
+[package]
+name = "tui_wrapper"
+version = "0.1.1"
+authors = ["Frosty"]
+edition = "2021"
+
+[dependencies]
+crossterm = "0.25"
+tui = "0.19.0"

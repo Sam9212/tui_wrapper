@@ -1,0 +1,12 @@
+# Backup files, target directory, and Cargo.lock
+/target/
+Cargo.lock
+**/*.rs.bk
+
+# Getting rid of replit stuff (just in case I made edits there)
+/.replit
+/replit.nix
+/.upm/
+
+# Etc
+/README.html
