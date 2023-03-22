@@ -261,7 +261,7 @@ impl<A: App> UI<A> {
 }
 
 impl<A: App + Ticked> UI<A> {
-    /// This function creates a new UI, supplying it with a tick rate (the time between each `on_tick`
+    /// This function creates a new UI, taking a tick rate value (the time between each `on_tick`
     /// function's calling), and an app struct which implements `App` and `Ticked`.
     /// 
     /// Use this with `run_ticked` and not `run`!
