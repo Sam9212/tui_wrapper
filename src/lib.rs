@@ -14,9 +14,6 @@
 //! tui = "0.19.0"
 //! ```
 
-extern crate tui;
-extern crate crossterm;
-
 mod tests;
 
 use crossterm::{
