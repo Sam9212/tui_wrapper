@@ -13,19 +13,26 @@ use crate::app::{App, Ticked};
 
 /// The struct containing your application and your terminal.
 ///
-/// An application is a struct which implements the Application
-/// trait and (optionally) the Ticked trait. A UI with a Ticked
-/// Application can use `run_ticked` which is useful for UIs which
-/// need to update data when input isn't being received.
+/// An application is any struct which implements the [`App`]
+/// trait and (optionally) the [`Ticked`] trait. 
 /// 
-/// A UI with an Application that is not Ticked can use `run` to
-/// begin running the app.
+/// You should create your UI using the `new` method 
+/// (if you do not want it to be ticked), or, if you 
+/// have an application struct which implements Ticked,
+/// you should use `new_ticked` which allows you to 
+/// supply a tickrate for your application.
+///
+/// You run these UIs using their respective `run` and 
+/// `run_ticked` methods, depending on what kind of app
+/// you supplied. Your code will panic if you use the
+/// wrong run method for your UI (i.e. `new_ticked` and
+/// `run` used together or vice versa).
 /// 
 /// # Examples
 ///
 /// This example creates an app that immediately closes after running.
 /// We can see this in the `draw` function where the variable which
-/// we have assigned the open/closed state of the program to,
+/// we have assigned the open/closed state of the program to
 /// is set to true immediately. The main loop of a UI only runs while
 /// `is_closed` is returning false.
 /// 
@@ -67,16 +74,21 @@ where
     A: App,
 {
     terminal: Terminal<CrosstermBackend<Stdout>>,
+    /// How often your application struct's `on_tick` method is called.
     tick_rate: Option<Duration>,
+    /// See [`App`] and [`Ticked`]
     app: A,
 }
 
 impl<A: App> UI<A> {
-    /// This function creates a new `UI` instance, taking in an instance of a struct which implements `App`.
+    /// This function creates a new `UI` instance, taking in a
+    /// struct which implements `App`.
     /// 
-    /// It initializes the terminal by entering an alternate screen, and enabling mouse capture.
-    /// This function should not be used with an App which also implements `Ticked`, in which case the function 
-    /// `new_ticked` should be used instead.
+    /// It initializes the terminal by entering an alternate
+    /// screen, and enabling mouse capture. This function should
+    /// not be used with an App which also implements `Ticked`,
+    /// in which case the function `new_ticked` should be used
+    /// instead.
     pub fn new(app: A) -> io::Result<Self> {
         enable_raw_mode()?;
         let mut stdout = io::stdout();
@@ -90,11 +102,9 @@ impl<A: App> UI<A> {
         })
     }
 
-    /// This function runs an app in **unticked** mode, which means that no code will run in the background.
-    /// (i.e. there is no `on_tick` event being called)
-    /// 
-    /// *Note: The `on_tick` event comes from implementing `Ticked` on your application struct.
-    /// If `Ticked` is implemented, you should use `run_ticked` to make use of it instead.*
+    /// This function runs an application that has been created
+    /// using `new`, and will panic if used with a UI made with 
+    /// `run_ticked`.
     pub fn run(&mut self) -> io::Result<()> {
         if let Some(_) = self.tick_rate {
             eprintln!("Hey! You shouldn't use `run` in conjunction with `new_ticked`. Use the functions");
@@ -147,18 +157,19 @@ impl<A: App + Ticked> UI<A> {
     }
     
     pub fn run_ticked(&mut self) -> io::Result<()> {
-        if let None = self.tick_rate {
-            eprintln!("Hey! You shouldn't use `run_ticked` in conjunction with `new`. Use the functions");
-            eprintln!("in their respective pairs, which are: `new` + `run`, and `new_ticked` + `run_ticked`.");
-            panic!("`new`/`new_ticked` not used with respective `run`/`run_ticked` pair");
-        }
+        let tr = match self.tick_rate {
+            None => {
+                eprintln!("Hey! You shouldn't use `run_ticked` in conjunction with `new`. Use the functions");
+                eprintln!("in their respective pairs, which are: `new` + `run`, and `new_ticked` + `run_ticked`.");
+                panic!("`new`/`new_ticked` not used with respective `run`/`run_ticked` pair");
+            }
+            Some(tr) => tr,
+        };
         
         let mut last_tick = Instant::now();
         while !self.app.is_closed() {
             self.terminal.draw(|f| self.app.draw(f))?;
-            let timeout = self
-                .tick_rate
-                .unwrap()
+            let timeout = tr
                 .checked_sub(last_tick.elapsed())
                 .unwrap_or(Duration::from_secs(0));
 
