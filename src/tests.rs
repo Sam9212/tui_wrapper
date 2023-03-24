@@ -5,14 +5,10 @@ mod tests {
     #[should_panic]
     fn it_has_a_bad_pair() {
         use crate::{
-            UI,
-            App,
-            Ticked,
+            ui::UI,
+            app::{App, Ticked},
         };
-        use tui::{
-            backend::Backend,
-            Frame,
-        };
+        use tui::{backend::Backend, Frame};
         use crossterm::event::{KeyCode, KeyEvent};
 
         struct MyApp {

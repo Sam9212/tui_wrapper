@@ -5,7 +5,7 @@ This crate is dependent on both tui and crossterm, so you'll need these in your 
 ```
 [dependencies]
 crossterm = "0.25"
-tui = "0.19.0"
+tui = "0.19"
 ```
 
 ## How to use
@@ -14,6 +14,8 @@ You **must** implement `App` on your struct and may also want to implement `Tick
 
 If your application does not need to do any kind of computation on a regular basis, and only needs to react 
 to keypress events, then you only need to implement `App`.
+
+### !! TODO: Make a more featureful example as opposed to empty one
 
 ```
 use tui_wrapper::{UI, App};
