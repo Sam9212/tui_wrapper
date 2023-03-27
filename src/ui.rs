@@ -73,20 +73,22 @@ pub struct UI<A>
 where
     A: App,
 {
+    /// The [`tui`] Terminal interface which is passed into
+    /// crossterm commands.
     terminal: Terminal<CrosstermBackend<Stdout>>,
     /// How often your application struct's `on_tick` method is called.
     tick_rate: Option<Duration>,
-    /// See [`App`] and [`Ticked`]
+    /// See [`App`] and [`Ticked`].
     app: A,
 }
 
 impl<A: App> UI<A> {
-    /// This function creates a new `UI` instance, taking in a
-    /// struct which implements `App`.
+    /// This function creates a new [`UI`] instance, taking in a
+    /// struct which implements [`App`].
     /// 
     /// It initializes the terminal by entering an alternate
     /// screen, and enabling mouse capture. This function should
-    /// not be used with an App which also implements `Ticked`,
+    /// not be used with an App which also implements [`Ticked`],
     /// in which case the function `new_ticked` should be used
     /// instead.
     pub fn new(app: A) -> io::Result<Self> {
@@ -121,11 +123,14 @@ impl<A: App> UI<A> {
         Ok(())
     }
     
-    /// This function leaves the alternate screen of the terminal and disables mouse capturing events.
-    /// Use this after your app's main loop is completed.
+    /// This function leaves the alternate screen of the terminal
+    /// and disables mouse capturing events. Use this after your
+    /// app's main loop is completed.
     /// 
-    /// A notable difference between this function and the `new`/`new_ticked` functions are that this function
-    /// should be used regardless of if your application struct is `Ticked` or not.
+    /// A notable difference between this function and the 
+    /// `new`/`new_ticked` functions are that this function
+    /// should be used regardless of if your application
+    /// struct is [`Ticked`] or not.
     pub fn destroy_app(&mut self) -> io::Result<()> {
         disable_raw_mode()?;
         execute!(
@@ -139,10 +144,13 @@ impl<A: App> UI<A> {
 }
 
 impl<A: App + Ticked> UI<A> {
-    /// This function creates a new UI, taking a tick rate value (the time between each `on_tick`
-    /// function's calling), and an app struct which implements `App` and `Ticked`.
+    /// This function creates a new UI, taking a tick rate
+    /// value (the time between each `on_tick` function's
+    /// calling), and an app struct which implements `App`
+    /// and `Ticked`.
     /// 
-    /// Use this with `run_ticked` and not `run`!
+    /// It initializes the terminal by entering an alternate
+    /// screen, and enabling mouse capture. Use this with `run_ticked` and not `run`!
     pub fn new_ticked(app: A, tick_rate: Duration) -> io::Result<Self> {
         enable_raw_mode()?;
         let mut stdout = io::stdout();
