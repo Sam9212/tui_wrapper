@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 //! A wrapper for [`tui`] which should make starting projects
 //! easier and quicker, with some minor constraints on design.
 //! As progress continues I will try to sacrifice as little
@@ -14,6 +16,12 @@
 //! tui = "0.19.0"
 //! ```
 
+/// This module contains the [`UI`](crate::ui::UI) struct.
 pub mod ui;
+
+/// This module contains the structs [`App`](crate::app::App)
+/// and [`Ticked`](crate::app::Ticked) which are used with the
+/// [`ui`](crate::ui) module to create applications.
 pub mod app;
+
 mod tests;
