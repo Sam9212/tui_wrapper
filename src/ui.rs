@@ -88,9 +88,9 @@ impl<A: App> UI<A> {
     /// 
     /// It initializes the terminal by entering an alternate
     /// screen, and enabling mouse capture. This function should
-    /// not be used with an App which also implements [`Ticked`],
-    /// in which case the function `new_ticked` should be used
-    /// instead.
+    /// not be used with an application struct which also 
+    /// implements [`Ticked`], in which case the function
+    /// `new_ticked` should be used instead.
     pub fn new(app: A) -> io::Result<Self> {
         enable_raw_mode()?;
         let mut stdout = io::stdout();
@@ -106,7 +106,7 @@ impl<A: App> UI<A> {
 
     /// This function runs an application that has been created
     /// using `new`, and will panic if used with a UI made with 
-    /// `run_ticked`.
+    /// `new_ticked`.
     pub fn run(&mut self) -> io::Result<()> {
         if let Some(_) = self.tick_rate {
             eprintln!("Hey! You shouldn't use `run` in conjunction with `new_ticked`. Use the functions");
@@ -127,10 +127,10 @@ impl<A: App> UI<A> {
     /// and disables mouse capturing events. Use this after your
     /// app's main loop is completed.
     /// 
-    /// A notable difference between this function and the 
-    /// `new`/`new_ticked` functions are that this function
-    /// should be used regardless of if your application
-    /// struct is [`Ticked`] or not.
+    /// Keep in mind that this function can be used for both 
+    /// [`Ticked`] and not [`Ticked`] application structs,
+    /// unlike the `new`/`run` pairs which have variants for 
+    /// application structs which are [`Ticked`].
     pub fn destroy_app(&mut self) -> io::Result<()> {
         disable_raw_mode()?;
         execute!(
@@ -146,11 +146,14 @@ impl<A: App> UI<A> {
 impl<A: App + Ticked> UI<A> {
     /// This function creates a new UI, taking a tick rate
     /// value (the time between each `on_tick` function's
-    /// calling), and an app struct which implements `App`
-    /// and `Ticked`.
+    /// calling), and an app struct which implements [`App`]
+    /// and [`Ticked`].
     /// 
     /// It initializes the terminal by entering an alternate
-    /// screen, and enabling mouse capture. Use this with `run_ticked` and not `run`!
+    /// screen, and enabling mouse capture. This function 
+    /// should not be used with an application struct that
+    /// does not implement [`Ticked`], in which case the 
+    /// function `new` should be used instead.
     pub fn new_ticked(app: A, tick_rate: Duration) -> io::Result<Self> {
         enable_raw_mode()?;
         let mut stdout = io::stdout();
@@ -163,7 +166,10 @@ impl<A: App + Ticked> UI<A> {
             app,
         })
     }
-    
+
+    /// This function runs an application that has been created
+    /// using `new_ticked`, and will panic if used with a UI made with 
+    /// `new`.
     pub fn run_ticked(&mut self) -> io::Result<()> {
         let tr = match self.tick_rate {
             None => {
