@@ -9,7 +9,7 @@ mod tests {
             app::{App, Ticked},
         };
         use tui::{backend::Backend, Frame};
-        use crossterm::event::{KeyCode, KeyEvent};
+        use crossterm::event::{KeyCode, Event};
 
         struct MyApp {
             should_close: bool,
@@ -20,9 +20,11 @@ mod tests {
                 
             }
 
-            fn on_input_received(&mut self, event: KeyEvent) {
-                if event.code == KeyCode::Char('q') {
-                    self.should_close = true;
+            fn on_input_received(&mut self, event: Event) {
+                if let Event::Key(kevent) = event {
+                    if kevent.code == KeyCode::Char('q') {
+                        self.should_close = true;
+                    }
                 }
             }
 
