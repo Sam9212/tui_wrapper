@@ -1,4 +1,4 @@
-use crossterm::event::KeyEvent;
+use crossterm::event::Event;
 use tui::{
     backend::Backend,
     Frame,
@@ -22,7 +22,7 @@ use tui::{
 ///     backend::Backend,
 ///     Frame,
 /// };
-/// use crossterm::event::{KeyEvent, KeyCode};
+/// use crossterm::event::{Event, KeyCode};
 /// 
 /// struct HappyTitleApp {
 ///     is_closed: bool,
@@ -36,9 +36,11 @@ use tui::{
 ///         f.render_widget(block, f.size());
 ///     }
 /// 
-///     fn on_input_received(&mut self, event: KeyEvent) {
-///         if event.code == KeyCode::Char('q') {
-///             self.is_closed = true;
+///     fn on_input_received(&mut self, event: Event) {
+///         if let Event::Key(kevent) = event {
+///             if kevent.code == KeyCode::Char('q') {
+///                 self.is_closed = true;
+///             }
 ///         }
 ///     }
 /// 
@@ -59,7 +61,7 @@ pub trait App {
     fn draw(&mut self, f: &mut Frame<impl Backend>);
     /// The function called by the [`UI`](crate::ui::UI) every time an input event
     /// is received.
-    fn on_input_received(&mut self, event: KeyEvent);
+    fn on_input_received(&mut self, event: Event);
     /// A getter function for anywhere in your code which indicates
     /// if your app is in a state where it should close. You most
     /// likely will want to use this as a getter for a field in your
@@ -87,7 +89,7 @@ pub trait App {
 ///     backend::Backend,
 ///     Frame,
 /// };
-/// use crossterm::event::{KeyEvent, KeyCode};
+/// use crossterm::event::{Event, KeyCode};
 /// 
 /// struct HappyTitleApp {
 ///     is_closed: bool,
@@ -102,9 +104,11 @@ pub trait App {
 ///         f.render_widget(block, f.size());
 ///     }
 /// 
-///     fn on_input_received(&mut self, event: KeyEvent) {
-///         if event.code == KeyCode::Char('q') {
-///             self.is_closed = true;
+///     fn on_input_received(&mut self, event: Event) {
+///         if let Event::Key(kevent) = event {
+///             if kevent.code == KeyCode::Char('q') {
+///                 self.is_closed = true;
+///             }
 ///         }
 ///     }
 /// 
@@ -124,6 +128,7 @@ pub trait App {
 /// ui.destroy_app().expect("There was an error uninitializing the terminal!");
 /// ```
 pub trait Ticked {
-    /// A function called at a fixed interval by [`UI`](crate::ui::UI)s which are [`Ticked`]
+    /// A function called at a fixed interval by 
+    /// [`UI`](crate::ui::UI)s which are [`Ticked`]
     fn on_tick(&mut self);
 }

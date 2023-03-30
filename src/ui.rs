@@ -3,7 +3,7 @@ use tui::{
     Terminal,
 };
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event},
+    event::{self, DisableMouseCapture, EnableMouseCapture},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -41,7 +41,7 @@ use crate::app::{App, Ticked};
 /// ```
 /// use tui_wrapper::{ui::UI, app::App};
 /// use tui::{backend::Backend, Frame};
-/// use crossterm::event::KeyEvent;
+/// use crossterm::event::Event;
 /// 
 /// struct MyApp(bool);
 /// impl App for MyApp {
@@ -52,7 +52,7 @@ use crate::app::{App, Ticked};
 ///     }
 /// 
 ///     #[allow(unused)]
-///     fn on_input_received(&mut self, event: KeyEvent) {
+///     fn on_input_received(&mut self, event: Event) {
 ///         // Write logic for when an event is received
 ///     }
 ///         
@@ -116,9 +116,8 @@ impl<A: App> UI<A> {
 
         while !self.app.is_closed() {
             self.terminal.draw(|f| self.app.draw(f))?;
-            if let Event::Key(event) = event::read()? {
-                self.app.on_input_received(event);
-            }
+            let event = event::read()?;
+            self.app.on_input_received(event);
         }
         Ok(())
     }
@@ -188,9 +187,8 @@ impl<A: App + Ticked> UI<A> {
                 .unwrap_or(Duration::from_secs(0));
 
             if event::poll(timeout)? {
-                if let Event::Key(event) = event::read()? {
-                    self.app.on_input_received(event);
-                }
+                let event = event::read()?;
+                self.app.on_input_received(event);
             }
             if last_tick.elapsed() >= self.tick_rate.unwrap() {
                 self.app.on_tick();
