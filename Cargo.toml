@@ -5,5 +5,5 @@ authors = ["Sam"]
 edition = "2021"
 
 [dependencies]
-crossterm = "0.25"
+crossterm = "0.27"
 tui = "0.19"
