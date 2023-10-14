@@ -1,4 +1,4 @@
-use tui::{
+use ratatui::{
     backend::CrosstermBackend,
     Terminal,
 };
@@ -40,14 +40,14 @@ use crate::app::{App, Ticked};
 /// immediately closing.
 /// ```
 /// use tui_wrapper::{ui::UI, app::App};
-/// use tui::{backend::Backend, Frame};
+/// use ratatui::{backend::Backend, Frame};
 /// use crossterm::event::Event;
 /// 
 /// struct MyApp(bool);
 /// impl App for MyApp {
 ///     #[allow(unused)]
 ///     fn draw(&mut self, f: &mut Frame<impl Backend>) {
-///         // Write tui-rs code for drawing to screen
+///         // Write ratatui code for drawing to screen
 ///         self.0 = true;
 ///     }
 /// 
@@ -73,7 +73,7 @@ pub struct UI<A>
 where
     A: App,
 {
-    /// The [`tui`] Terminal interface which is passed into
+    /// The [`ratatui`] Terminal interface which is passed into
     /// crossterm commands.
     terminal: Terminal<CrosstermBackend<Stdout>>,
     /// How often your application struct's `on_tick` method is called.

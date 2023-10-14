@@ -8,7 +8,7 @@ mod tests {
             ui::UI,
             app::{App, Ticked},
         };
-        use tui::{backend::Backend, Frame};
+        use ratatui::{backend::Backend, Frame};
         use crossterm::event::{KeyCode, Event};
 
         struct MyApp {

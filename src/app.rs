@@ -1,5 +1,5 @@
 use crossterm::event::Event;
-use tui::{
+use ratatui::{
     backend::Backend,
     Frame,
 };
@@ -17,7 +17,7 @@ use tui::{
 /// 
 /// ```
 /// use tui_wrapper::{ui::UI, app::App};
-/// use tui::{
+/// use ratatui::{
 ///     widgets::{Block, BorderType},
 ///     backend::Backend,
 ///     Frame,
@@ -57,7 +57,7 @@ pub trait App {
     /// The funcion called by the [`UI`](crate::ui::UI) every frame of the application.
     /// 
     /// Use the mutable reference to the [`Frame`] provided by this
-    /// function to draw [`tui`] widgets to the screen.
+    /// function to draw [`ratatui`] widgets to the screen.
     fn draw(&mut self, f: &mut Frame<impl Backend>);
     /// The function called by the [`UI`](crate::ui::UI) every time an input event
     /// is received.
@@ -84,7 +84,7 @@ pub trait App {
 /// 
 /// ```
 /// use tui_wrapper::{ui::UI, app::{App, Ticked}};
-/// use tui::{
+/// use ratatui::{
 ///     widgets::{Block, BorderType},
 ///     backend::Backend,
 ///     Frame,

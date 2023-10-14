@@ -1,11 +1,13 @@
 # tui_wrapper
-A wrapper for tui which should make starting projects easier and quicker, with some minor constraints on design. As progress continues I will try to sacrifice as little design adaptability as possible. However, this may not be possible and I may be in future forced to redesign the crate. Keep in mind that this is my first crate I have published to crates.io, and may not be as well designed as some Rustaceans would like.
+A wrapper for ratatui which should make starting projects easier and quicker, with some minor constraints on design. As progress continues I will try to sacrifice as little design adaptability as possible. However, this may not be possible and I may be in future forced to redesign the crate. 
 
-This crate is dependent on both tui and crossterm, so you'll need these in your `cargo.toml`:
+This crate is not on crates.io and will not be published to it until I feel like it's ready.
+
+This crate is dependent on both ratatui and crossterm, so you'll need these in your `cargo.toml`:
 ```
 [dependencies]
-crossterm = "0.25"
-tui = "0.19"
+crossterm = "0.27"
+ratatui = "0.23"
 ```
 
 ## How to use
@@ -18,8 +20,10 @@ to keypress events, then you only need to implement `App`.
 ### !! TODO: Make a more featureful example as opposed to empty one
 
 ```
-use tui_wrapper::{UI, App};
-use tui::{backend::Backend, Frame};
+use tui_wrapper::{
+    ui::UI, app::App
+};
+use ratatui::{backend::Backend, Frame};
 use crossterm::event::{KeyEvent, KeyCode};
 
 struct MyApp(bool);
